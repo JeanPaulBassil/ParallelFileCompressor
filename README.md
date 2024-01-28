@@ -46,4 +46,4 @@ The utility implements three main parallelization strategies:
 3. **Dynamic Task Assignment**: A fixed number of tasks that dynamically receive files to compress until all files are processed.
 
 ## Performance Analysis
-For insights into the performance gains achieved through each parallelization strategy, refer to the `PERFORMANCE.md` document.
+For insights into the performance gains achieved through each parallelization strategy, refer to the [PERFORMANCE.md](./docs/PERFORMANCE.md) document.
