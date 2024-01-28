@@ -1,4 +1,5 @@
 #include "headers.h"
+#include "compression.h"
 
 int main(int argc, char **argv) {
 
@@ -9,12 +10,13 @@ int main(int argc, char **argv) {
     exit(0);
   }
 
-  char **filesList = listFiles(argv[1]);
+  // char **filesList = listFiles(argv[1]);
 
-  while (*filesList != NULL) {
-    printf("%s\n", *filesList);
-    filesList++;
-  }
+  // while (*filesList != NULL) {
+  //   printf("%s\n", *filesList);
+  //   filesList++;
+  // }
 
+  compressFilesSequencially(argv[1]);
   return 0;
 }

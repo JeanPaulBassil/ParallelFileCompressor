@@ -37,6 +37,7 @@ Debug/
 
 # Data files (uncomment if you wish to exclude local data files)
 /data/
+/output/
 
 # Compiled Source #
 ###################

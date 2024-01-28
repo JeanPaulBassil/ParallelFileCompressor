@@ -1,0 +1,1 @@
+void compressFilesSequencially(const char *folderPath);
