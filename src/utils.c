@@ -1,7 +1,3 @@
-// This files contains functions useful for assignment program : parallel
-// compress tool
-// ------------------------------------------------------------------------------------
-
 #define _GNU_SOURCE
 #include "headers.h"
 #include <dirent.h>
