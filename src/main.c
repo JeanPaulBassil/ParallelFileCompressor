@@ -13,6 +13,7 @@ int main(int argc, char **argv) {
 
   // compressFilesSequencially(argv[1]);
   // compressWithNThreads(argv[1]);
-  batchedParallelCompression(argv[1], numCpu);
+  // batchedParallelCompression(argv[1], numCpu);
+  nbCoresTasksWithMultFileAssignment(argv[1], numCpu);
   return 0;
 }

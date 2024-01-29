@@ -1,7 +1,13 @@
 #include "headers.h"
+#include <pthread.h>
 #include <sys/stat.h>
 #include <time.h>
-#include<pthread.h>
+
+typedef struct {
+  char **files;
+  int startIdx;
+  int endIdx;
+} FileBatch;
 
 void ensureDirectoryExists(const char *dirPath) {
   struct stat st;
@@ -110,3 +116,53 @@ void batchedParallelCompression(const char *folderPath, int batchSize) {
          filesCount, batchSize, end - start);
 }
 
+void *compressMultipleFiles(void *arg) {
+  FileBatch *batch = (FileBatch *)arg;
+  for (int i = batch->startIdx; i <= batch->endIdx; i++) {
+    compressFile((void *)batch->files[i]);
+  }
+  free(batch);
+  return NULL;
+}
+
+void nbCoresTasksWithMultFileAssignment(const char *folderPath,
+                                        int numberOfCores) {
+  time_t start, end;
+  start = time(NULL);
+  int filesCount = countFiles(folderPath);
+  printf("Starting parallel compression with %d threads\n", numberOfCores);
+  char **filesList = listFiles(folderPath);
+
+  ensureDirectoryExists("output");
+
+  pthread_t threads[numberOfCores];
+  int filesPerThread = filesCount / numberOfCores;
+  int extraFiles = filesCount % numberOfCores;
+
+  for (int i = 0; i < numberOfCores; i++) {
+    int startIdx = i * filesPerThread;
+    int endIdx = startIdx + filesPerThread - 1;
+    if (i < extraFiles) {
+      startIdx += i;
+      endIdx += i + 1;
+    } else {
+      startIdx += extraFiles;
+      endIdx += extraFiles;
+    }
+
+    FileBatch *batch = malloc(sizeof(FileBatch));
+    batch->files = filesList;
+    batch->startIdx = startIdx;
+    batch->endIdx = endIdx;
+
+    pthread_create(&threads[i], NULL, compressMultipleFiles, (void *)batch);
+  }
+
+  for (int i = 0; i < numberOfCores; i++) {
+    pthread_join(threads[i], NULL);
+  }
+
+  end = time(NULL);
+  printf("Time taken to compress %d files with %d threads is %ld seconds\n",
+         filesCount, numberOfCores, end - start);
+}
