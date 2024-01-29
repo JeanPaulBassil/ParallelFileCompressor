@@ -1,6 +1,7 @@
 #include "headers.h"
 #include <sys/stat.h>
 #include <time.h>
+#include<pthread.h>
 
 void ensureDirectoryExists(const char *dirPath) {
   struct stat st;
@@ -39,3 +40,40 @@ void compressFilesSequencially(const char *folderPath) {
   printf("Time taken to compress %d files sequencially is %ld seconds\n",
          filesCount, end - start);
 }
+
+void compressFile(void *filePath) {
+  char command[100];
+  sprintf(command, "gzip -v -c %s > 'output/meteo%d.gz'", (char *)filePath,
+          (int)filePath);
+  system(command);
+}
+
+void compressWithNThreads(const char *folderPath) {
+  time_t start, end;
+  start = time(NULL);
+  int filesCount = countFiles(folderPath);
+  printf("Starting parallel compression with %d threads\n", filesCount);
+  char **filesList = listFiles(folderPath);
+
+  ensureDirectoryExists("output");
+
+  pthread_t threads[filesCount];
+  pthread_attr_t attr;
+
+  pthread_attr_init(&attr);
+
+  for (int i = 0; i < filesCount; i++) {
+    char *filePath = filesList[i];
+    pthread_create(&threads[i], &attr, compressFile, (void *)filePath);
+  }
+
+  for (int i = 0; i < filesCount; i++) {
+    pthread_join(threads[i], NULL);
+  }
+
+  end = time(NULL);
+
+  printf("Time taken to compress %d files with %d threads is %ld seconds\n",
+         filesCount, filesCount, end - start);
+}
+

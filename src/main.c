@@ -10,13 +10,7 @@ int main(int argc, char **argv) {
     exit(0);
   }
 
-  // char **filesList = listFiles(argv[1]);
-
-  // while (*filesList != NULL) {
-  //   printf("%s\n", *filesList);
-  //   filesList++;
-  // }
-
-  compressFilesSequencially(argv[1]);
+  // compressFilesSequencially(argv[1]);
+  compressWithNThreads(argv[1]);
   return 0;
 }
