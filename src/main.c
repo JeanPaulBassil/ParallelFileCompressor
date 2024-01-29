@@ -3,7 +3,8 @@
 
 int main(int argc, char **argv) {
 
-  printf("you have %d cores on your machine\n", getNumCPUs());
+  int numCpu = getNumCPUs();
+  printf("you have %d cores on your machine\n", numCpu);
 
   if (argc < 2) {
     printf("provide a folder name after the command to test file listing\n");
@@ -11,6 +12,7 @@ int main(int argc, char **argv) {
   }
 
   // compressFilesSequencially(argv[1]);
-  compressWithNThreads(argv[1]);
+  // compressWithNThreads(argv[1]);
+  batchedParallelCompression(argv[1], numCpu);
   return 0;
 }

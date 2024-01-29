@@ -77,3 +77,36 @@ void compressWithNThreads(const char *folderPath) {
          filesCount, filesCount, end - start);
 }
 
+void batchedParallelCompression(const char *folderPath, int batchSize) {
+  time_t start, end;
+  start = time(NULL);
+  int filesCount = countFiles(folderPath);
+  printf("Starting parallel compression with %d threads\n", filesCount);
+  char **filesList = listFiles(folderPath);
+
+  ensureDirectoryExists("output");
+
+  pthread_t threads[filesCount];
+
+  for (int i = 0; i < filesCount; i += batchSize) {
+    pthread_attr_t attr;
+    pthread_attr_init(&attr);
+    int batchEnd = i + batchSize;
+    if (batchEnd > filesCount) {
+      batchEnd = filesCount;
+    }
+    for (int j = i; j < batchEnd; j++) {
+      char *filePath = filesList[j];
+      pthread_create(&threads[j], &attr, compressFile, (void *)filePath);
+    }
+    for (int j = i; j < batchEnd; j++) {
+      pthread_join(threads[j], NULL);
+    }
+  }
+
+  end = time(NULL);
+
+  printf("Time taken to compress %d files with %d threads is %ld seconds\n",
+         filesCount, batchSize, end - start);
+}
+
