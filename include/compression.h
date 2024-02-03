@@ -1,4 +1,4 @@
-void compressFilesSequencially(const char *folderPath);
-void compressWithNThreads(const char *folderPath);
-void batchedParallelCompression(const char *folderPath, int batchSize);
-void nbCoresTasksWithMultFileAssignment(const char *folderPath, int numberOfCores);
+int compressFilesSequencially(const char *folderPath);
+int compressWithNThreads(const char *folderPath);
+int batchedParallelCompression(const char *folderPath, int batchSize);
+int nbCoresTasksWithMultFileAssignment(const char *folderPath, int numberOfCores);

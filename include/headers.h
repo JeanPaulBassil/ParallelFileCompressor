@@ -7,3 +7,7 @@
 int getNumCPUs();
 int countFiles(const char *folderPath);
 char **listFiles(const char *folderPath);
+int *secondsToHMS(int totalSeconds);
+void appendToMarkdown(const char *fileName, const char *content);
+void resetMarkdown(const char *fileName, const char *content);
+

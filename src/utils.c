@@ -2,8 +2,20 @@
 #include "headers.h"
 #include <dirent.h>
 
+// Returns the number of CPUs on the machine
+// @param: void
+// @return: the number of CPUs
+// *
+// *
+// *
 int getNumCPUs() { return sysconf(_SC_NPROCESSORS_ONLN); }
 
+// Counts the number of files in a directory
+// @param folderPath: the path to the directory
+// @return: the number of files in the directory
+// *
+// *
+// *
 int countFiles(const char *folderPath) {
   DIR *dir;
   struct dirent *entry;
@@ -21,6 +33,12 @@ int countFiles(const char *folderPath) {
   return count;
 }
 
+// Lists the files in a directory
+// @param folderPath: the path to the directory
+// @return: the list of files in the directory
+// *
+// *
+// *
 char **listFiles(const char *folderPath) {
   DIR *dir;
   struct dirent *entry;
@@ -51,4 +69,52 @@ char **listFiles(const char *folderPath) {
   filesList[fileIndex] = NULL;
   closedir(dir);
   return filesList;
+}
+
+// Translates seconds to hours, minutes and seconds 
+// @param totalSeconds: the total number of seconds
+// @return: array containing hours, minutes and seconds
+// *
+// *
+// *
+int *secondsToHMS(int totalSeconds) {
+  int *hms = (int *)malloc(3 * sizeof(int));
+  hms[0] = totalSeconds / 3600;
+  hms[1] = (totalSeconds % 3600) / 60;
+  hms[2] = totalSeconds % 60;
+  return hms;
+}
+
+// Incrementally add to markdown file
+// @param fileName: the name of the file
+// @param content: the content to add to the file
+// @return: void
+// *
+// *
+// *
+void appendToMarkdown(const char *fileName, const char *content) {
+  FILE *file = fopen(fileName, "a");
+  if (file == NULL) {
+    printf("Error opening file <%s>\n", fileName);
+    return;
+  }
+  fprintf(file, "%s\n", content);
+  fclose(file);
+}
+
+// reset markdown file
+// @param fileName: the name of the file
+// @param content: the content to add to the file
+// @return: void
+// *
+// *
+// *
+void resetMarkdown(const char *fileName, const char *content) {
+  FILE *file = fopen(fileName, "w");
+  if (file == NULL) {
+    printf("Error opening file <%s>\n", fileName);
+    return;
+  }
+  fprintf(file, "%s\n", content);
+  fclose(file);
 }
